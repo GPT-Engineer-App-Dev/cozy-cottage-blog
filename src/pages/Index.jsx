@@ -1,4 +1,5 @@
 import { Box, Container, Flex, Heading, Text, VStack, Link, HStack, Spacer, Button, useColorModeValue } from "@chakra-ui/react";
+import { FaTrash } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 
@@ -12,6 +13,12 @@ const Index = () => {
     const storedPosts = JSON.parse(localStorage.getItem("posts")) || [];
     setPosts(storedPosts);
   }, []);
+  const handleDelete = (indexToDelete) => {
+    const updatedPosts = posts.filter((_, index) => index !== indexToDelete);
+    setPosts(updatedPosts);
+    localStorage.setItem("posts", JSON.stringify(updatedPosts));
+  };
+
   return (
     <Box bg={bg} color={color} minH="100vh">
       {/* Navigation Bar */}
@@ -45,7 +52,12 @@ const Index = () => {
         <VStack spacing={8} align="stretch">
           {posts.map((post, index) => (
             <Box key={index} p={5} shadow="md" borderWidth="1px" bg={bg} color={color}>
-              <Heading fontSize="xl">{post.title}</Heading>
+              <Flex justify="space-between" align="center">
+                <Heading fontSize="xl">{post.title}</Heading>
+                <Button colorScheme="red" size="sm" onClick={() => handleDelete(index)}>
+                  <FaTrash />
+                </Button>
+              </Flex>
               <Text mt={4}>{post.content}</Text>
             </Box>
           ))}
