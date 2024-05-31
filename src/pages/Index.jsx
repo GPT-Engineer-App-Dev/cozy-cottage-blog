@@ -1,7 +1,14 @@
-import { Box, Container, Flex, Heading, Text, VStack, Link, HStack, Spacer } from "@chakra-ui/react";
+import { Box, Container, Flex, Heading, Text, VStack, Link, HStack, Spacer, Button } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 
 const Index = () => {
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    const storedPosts = JSON.parse(localStorage.getItem("posts")) || [];
+    setPosts(storedPosts);
+  }, []);
   return (
     <Box>
       {/* Navigation Bar */}
@@ -29,15 +36,17 @@ const Index = () => {
 
       {/* Main Content Area */}
       <Container maxW="container.lg" py={8}>
+        <Button as={RouterLink} to="/add-post" colorScheme="teal" mb={8}>
+          Add New Post
+        </Button>
         <VStack spacing={8} align="stretch">
-          <Box p={5} shadow="md" borderWidth="1px">
-            <Heading fontSize="xl">First Blog Post</Heading>
-            <Text mt={4}>This is the content of the first blog post.</Text>
-          </Box>
-          <Box p={5} shadow="md" borderWidth="1px">
-            <Heading fontSize="xl">Second Blog Post</Heading>
-            <Text mt={4}>This is the content of the second blog post.</Text>
-          </Box>
+          {posts.map((post, index) => (
+            <Box key={index} p={5} shadow="md" borderWidth="1px">
+              <Heading fontSize="xl">{post.title}</Heading>
+              <Text mt={4}>{post.content}</Text>
+            </Box>
+          ))}
+          
         </VStack>
       </Container>
 
